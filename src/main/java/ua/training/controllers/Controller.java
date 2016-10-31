@@ -32,17 +32,23 @@ public class Controller {
     }
 
     private boolean readAndCheckNumber() {
+        view.showMessageWithRange(view.RANGE_MESSAGE,
+                model.getMinMark(), model.getMaxMark());
         int userNumber = readUserNumber();
-        if (userNumber != -1) {
+        if ((userNumber != -1)
+                && !(userNumber < model.getMinMark())
+                && !(userNumber > model.getMaxMark())) {
             switch (model.isNumbersEqual(userNumber)) {
                 case (0):
                     view.showMessage(view.CONGRATULATION_MESSAGE);
                     return false;
                 case (1):
                     view.showMessage(view.HIGHER_NUMBER);
+                    model.setMaxMark(userNumber);
                     break;
                 case (-1):
                     view.showMessage(view.LOWER_NUMBER);
+                    model.setMinMark(userNumber + 1);
                     break;
                 default:
                     System.err.print("Unexpected error!");
