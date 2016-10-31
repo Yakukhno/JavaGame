@@ -5,11 +5,14 @@ import ua.training.models.Model;
 import ua.training.views.View;
 
 /**
- * Hello world!
- *
+ * Main class
  */
 public class App {
 
+    /**
+     * Main method
+     * @param args console args
+     */
     public static void main(String[] args) {
         Model model = new Model();
         View view = new View();

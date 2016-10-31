@@ -5,6 +5,9 @@ import ua.training.views.View;
 
 import java.util.Scanner;
 
+/**
+ * Controller
+ */
 public class Controller {
 
     private Model model;
@@ -15,15 +18,22 @@ public class Controller {
         this.view = view;
     }
 
+    /**
+     * Initial method
+     */
     public void startGame() {
         Scanner scanner = new Scanner(System.in);
         view.showMessage(view.BARRIER_MESSAGE);
         setRange(scanner);
         model.setSecretNumber(model.getRandomNumber());
-        while (readAndCheckNumber(scanner));
+        while (!checkNumberForEquality(scanner));
     }
 
-    private void setRange(Scanner scanner) {
+    /**
+     * Reads barriers of range from user and checks it for valid form
+     * @param scanner scanner from console
+     */
+    public void setRange(Scanner scanner) {
         try {
             int minBarrier = Integer.parseInt(scanner.next());
             int maxBarrier = Integer.parseInt(scanner.next());
@@ -39,7 +49,13 @@ public class Controller {
         }
     }
 
-    private int readUserNumber(Scanner scanner) {
+    /**
+     * Reads number from user and checks it for valid form
+     * @param scanner scanner from console
+     * @return user's number if number has parsed properly
+     * or -1 if some problems occurs
+     */
+    public int readUserNumber(Scanner scanner) {
         int userNumber = -1;
         try {
             userNumber = Integer.parseInt(scanner.next());
@@ -49,7 +65,13 @@ public class Controller {
         return userNumber;
     }
 
-    private boolean readAndCheckNumber(Scanner scanner) {
+    /**
+     * Checks user's number for equality and shows messages
+     * @param scanner scanner from console
+     * @return true if user's number and secret number are equal,
+     * false if user's number and secret number aren't equal
+     */
+    public boolean checkNumberForEquality(Scanner scanner) {
         view.showMessageWithRange(view.RANGE_MESSAGE,
                 model.getMinBarrier(), model.getMaxBarrier());
         int userNumber = readUserNumber(scanner);
@@ -60,7 +82,7 @@ public class Controller {
                 case (0):
                     view.showMessage(view.CONGRATULATION_MESSAGE);
                     view.showStatistics(model.getStatistics());
-                    return false;
+                    return true;
                 case (1):
                     view.showMessage(view.HIGHER_NUMBER);
                     model.setMaxBarrier(userNumber);
@@ -74,7 +96,7 @@ public class Controller {
                     break;
             }
         }
-        return true;
+        return false;
     }
 
 
