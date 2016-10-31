@@ -1,41 +1,46 @@
 package ua.training.models;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Model {
 
-    private int hiddenNumber;
-    private int minMark;
-    private int maxMark;
-
-    public Model() {
-        hiddenNumber = getRandomNumber(0, 100);
-        minMark = 0;
-        maxMark = 100;
-    }
+    private int secretNumber;
+    private int minBarrier;
+    private int maxBarrier;
+    private ArrayList<Integer> statistics = new ArrayList<Integer>();
 
     public int isNumbersEqual(int userNumber) {
-        return (userNumber == hiddenNumber) ? 0 : (userNumber > hiddenNumber)
+        statistics.add(userNumber);
+        return (userNumber == secretNumber) ? 0 : (userNumber > secretNumber)
                 ? 1 : -1;
     }
 
-    public int getRandomNumber(int min, int max) {
-        return min + new Random().nextInt(max - min);
+    public ArrayList<Integer> getStatistics() {
+        return statistics;
     }
 
-    public int getMinMark() {
-        return minMark;
+    public int getRandomNumber() {
+        return minBarrier + new Random().nextInt(maxBarrier - minBarrier - 1) + 1;
     }
 
-    public void setMinMark(int minMark) {
-        this.minMark = minMark;
+    public int getMinBarrier() {
+        return minBarrier;
     }
 
-    public int getMaxMark() {
-        return maxMark;
+    public void setMinBarrier(int minBarrier) {
+        this.minBarrier = minBarrier;
     }
 
-    public void setMaxMark(int maxMark) {
-        this.maxMark = maxMark;
+    public int getMaxBarrier() {
+        return maxBarrier;
+    }
+
+    public void setMaxBarrier(int maxBarrier) {
+        this.maxBarrier = maxBarrier;
+    }
+
+    public void setSecretNumber(int secretNumber) {
+        this.secretNumber = secretNumber;
     }
 }

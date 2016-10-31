@@ -16,12 +16,30 @@ public class Controller {
     }
 
     public void startGame() {
-        view.showMessage(view.INITIAL_MESSAGE);
-        while (readAndCheckNumber());
+        Scanner scanner = new Scanner(System.in);
+        view.showMessage(view.BARRIER_MESSAGE);
+        setRange(scanner);
+        model.setSecretNumber(model.getRandomNumber());
+        while (readAndCheckNumber(scanner));
     }
 
-    private int readUserNumber() {
-        Scanner scanner = new Scanner(System.in);
+    private void setRange(Scanner scanner) {
+        try {
+            int minBarrier = Integer.parseInt(scanner.next());
+            int maxBarrier = Integer.parseInt(scanner.next());
+            if (maxBarrier > minBarrier + 1) {
+                model.setMinBarrier(minBarrier);
+                model.setMaxBarrier(maxBarrier);
+            } else {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            view.showMessage(view.ERROR_INPUT_MESSAGE + " Enter again");
+            setRange(scanner);
+        }
+    }
+
+    private int readUserNumber(Scanner scanner) {
         int userNumber = -1;
         try {
             userNumber = Integer.parseInt(scanner.next());
@@ -31,24 +49,25 @@ public class Controller {
         return userNumber;
     }
 
-    private boolean readAndCheckNumber() {
+    private boolean readAndCheckNumber(Scanner scanner) {
         view.showMessageWithRange(view.RANGE_MESSAGE,
-                model.getMinMark(), model.getMaxMark());
-        int userNumber = readUserNumber();
+                model.getMinBarrier(), model.getMaxBarrier());
+        int userNumber = readUserNumber(scanner);
         if ((userNumber != -1)
-                && !(userNumber < model.getMinMark())
-                && !(userNumber > model.getMaxMark())) {
+                && !(userNumber <= model.getMinBarrier())
+                && !(userNumber >= model.getMaxBarrier())) {
             switch (model.isNumbersEqual(userNumber)) {
                 case (0):
                     view.showMessage(view.CONGRATULATION_MESSAGE);
+                    view.showStatistics(model.getStatistics());
                     return false;
                 case (1):
                     view.showMessage(view.HIGHER_NUMBER);
-                    model.setMaxMark(userNumber);
+                    model.setMaxBarrier(userNumber);
                     break;
                 case (-1):
                     view.showMessage(view.LOWER_NUMBER);
-                    model.setMinMark(userNumber + 1);
+                    model.setMinBarrier(userNumber);
                     break;
                 default:
                     System.err.print("Unexpected error!");
