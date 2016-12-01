@@ -8,12 +8,20 @@ import java.util.ArrayList;
 public class View {
 
     //Text constants
-    public final String BARRIER_MESSAGE = "Please, enter barriers of range of numbers ";
-    public final String CONGRATULATION_MESSAGE = "Congratulations, you winner!";
-    public final String LOWER_NUMBER = "Your number is lower than hidden number.";
-    public final String HIGHER_NUMBER = "Your number is higher than hidden number.";
-    public final String ERROR_INPUT_MESSAGE = "You have written not correct values.";
-    public final String RANGE_MESSAGE = "Please, enter number in range from ";
+    public static final String BARRIER_MESSAGE = "Please, enter barriers of " +
+            "range of numbers:";
+    public static final String CONGRATULATION_MESSAGE = "Congratulations, " +
+            "you winner!";
+    public static final String LOWER_NUMBER = "Your number is lower than " +
+            "hidden number.";
+    public static final String HIGHER_NUMBER = "Your number is higher than " +
+            "hidden number.";
+    public static final String ERROR_INPUT_MESSAGE = "You have written not " +
+            "correct values.";
+    public static final String ERROR_AND_REPEAT_MESSAGE = ERROR_INPUT_MESSAGE
+            + " Enter again";
+    public static final String RANGE_MESSAGE = "Please, enter number in " +
+            "range from ";
 
     /**
      * Outputs message in console stream

@@ -1,6 +1,7 @@
 package ua.training.controllers;
 
 import ua.training.models.Model;
+import ua.training.models.ScannerAdapter;
 import ua.training.views.View;
 
 import java.util.Scanner;
@@ -12,6 +13,7 @@ public class Controller {
 
     private Model model;
     private View view;
+    private ScannerAdapter scanner = new ScannerAdapter(new Scanner(System.in));
 
     public Controller(Model model, View view) {
         this.model = model;
@@ -22,18 +24,16 @@ public class Controller {
      * Initial method
      */
     public void startGame() {
-        Scanner scanner = new Scanner(System.in);
-        view.showMessage(view.BARRIER_MESSAGE);
-        setRange(scanner);
+        view.showMessage(View.BARRIER_MESSAGE);
+        setRange();
         model.setSecretNumber(model.getRandomNumber());
-        while (!checkNumberForEquality(scanner));
+        while (!checkNumberForEquality());
     }
 
     /**
      * Reads barriers of range from user and checks it for valid form
-     * @param scanner scanner from console
      */
-    public void setRange(Scanner scanner) {
+    void setRange() {
         try {
             int minBarrier = Integer.parseInt(scanner.next());
             int maxBarrier = Integer.parseInt(scanner.next());
@@ -44,60 +44,55 @@ public class Controller {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
-            view.showMessage(view.ERROR_INPUT_MESSAGE + " Enter again");
-            setRange(scanner);
+            view.showMessage(View.ERROR_AND_REPEAT_MESSAGE);
+            setRange();
         }
     }
 
     /**
      * Reads number from user and checks it for valid form
-     * @param scanner scanner from console
      * @return user's number if number has parsed properly
      * or -1 if some problems occurs
      */
-    public int readUserNumber(Scanner scanner) {
+    int readUserNumber() {
         int userNumber = -1;
         try {
             userNumber = Integer.parseInt(scanner.next());
         } catch (NumberFormatException e) {
-            view.showMessage(view.ERROR_INPUT_MESSAGE);
+            view.showMessage(View.ERROR_INPUT_MESSAGE);
         }
         return userNumber;
     }
 
     /**
      * Checks user's number for equality and shows messages
-     * @param scanner scanner from console
      * @return true if user's number and secret number are equal,
      * false if user's number and secret number aren't equal
      */
-    public boolean checkNumberForEquality(Scanner scanner) {
-        view.showMessageWithRange(view.RANGE_MESSAGE,
+     boolean checkNumberForEquality() {
+        view.showMessageWithRange(View.RANGE_MESSAGE,
                 model.getMinBarrier(), model.getMaxBarrier());
-        int userNumber = readUserNumber(scanner);
+        int userNumber = readUserNumber();
         if ((userNumber != -1)
                 && !(userNumber <= model.getMinBarrier())
                 && !(userNumber >= model.getMaxBarrier())) {
-            switch (model.isNumbersEqual(userNumber)) {
-                case (0):
-                    view.showMessage(view.CONGRATULATION_MESSAGE);
-                    view.showStatistics(model.getStatistics());
-                    return true;
-                case (1):
-                    view.showMessage(view.HIGHER_NUMBER);
-                    model.setMaxBarrier(userNumber);
-                    break;
-                case (-1):
-                    view.showMessage(view.LOWER_NUMBER);
-                    model.setMinBarrier(userNumber);
-                    break;
-                default:
-                    System.err.print("Unexpected error!");
-                    break;
+            int comparingResult = model.isNumbersEqual(userNumber);
+            if (comparingResult == 0) {
+                view.showMessage(View.CONGRATULATION_MESSAGE);
+                view.showStatistics(model.getStatistics());
+                return true;
+            } else if (comparingResult > 0) {
+                view.showMessage(View.HIGHER_NUMBER);
+                model.setMaxBarrier(userNumber);
+            } else {
+                view.showMessage(View.LOWER_NUMBER);
+                model.setMinBarrier(userNumber);
             }
         }
         return false;
     }
 
-
+    public void setScanner(ScannerAdapter scanner) {
+        this.scanner = scanner;
+    }
 }
